@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Ilie Mardari](https://up.htmlacademy.ru/ecmascript/21/user/2385367).
-* Наставник: `Неизвестно`.
+* Наставник: [Денис Лопатин](https://htmlacademy.ru/profile/denislopatin).
 
 ---
 
