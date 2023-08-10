@@ -1,10 +1,9 @@
 import { createElement } from '../render.js';
-
-const createTemplate = () => ('<section class="trip-events"><h2 class="visually-hidden">Trip events</h2></section>');
+import { createTripEventsTemplate } from '../template/trip-events-template.js';
 
 export default class TripEventsView{
   getTemplate() {
-    return createTemplate();
+    return createTripEventsTemplate();
   }
 
   getElement() {
