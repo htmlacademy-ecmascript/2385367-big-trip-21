@@ -1,4 +1,4 @@
-import EventTypeView from '../view/event-type-view.js';
+import EventTypeFormView from '../view/event-type-form-view.js';
 import {render, RenderPosition} from '../render.js';
 import TripEventsItemView from '../view/trip-events-item-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
@@ -11,7 +11,7 @@ export default class PanelPresenter {
   TripEventsView = new TripEventsView();
   TripEventsListView = new TripEventsListView();
 
-  constructor({container}) {
+  constructor({ container }) {
     this.container = container;
   }
 
@@ -21,7 +21,7 @@ export default class PanelPresenter {
       render(new TripEventsItemView(), this.TripEventsListView.getElement());
     }
     render(new SortEventView(), this.TripEventsView.getElement());
-    render(new EventTypeView(), this.TripEventsListView.getElement(), RenderPosition.AFTERBEGIN);
+    render(new EventTypeFormView(), this.TripEventsListView.getElement(), RenderPosition.AFTERBEGIN);
     render(this.TripEventsListView, this.TripEventsView.getElement());
     render(this.TripEventsView, this.container);
   }

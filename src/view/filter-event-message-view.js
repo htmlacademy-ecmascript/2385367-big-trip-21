@@ -1,14 +1,10 @@
 import { createElement } from '../render.js';
-
-const createTemplate = () => (
-  '<p class="trip-events__msg">Click New Event to create your first point</p>'
-);
+import { createFilterEventMessageTemplate } from '../template/filter-event-message-template.js';
 
 export default class FilterEventMessageView {
   getTemplate() {
-    return createTemplate();
+    return createFilterEventMessageTemplate();
   }
-
 
   getElement() {
     if (!this.element) {

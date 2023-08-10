@@ -1,9 +1,9 @@
 import { createElement } from '../render.js';
-import { createTripFiltersTemplate } from '../template/trip-filters-template.js';
+import { createEventTypeFormTemplate } from '../template/event-type-form-template.js';
 
-export default class TripFiltersView {
+export default class EventTypeFormView {
   getTemplate() {
-    return createTripFiltersTemplate();
+    return createEventTypeFormTemplate();
   }
 
   getElement() {
