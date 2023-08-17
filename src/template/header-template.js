@@ -1,5 +1,5 @@
-export const createHeaderTemplate = () => (
-/*html*/ `<div class="page-body__container  page-header__container">
+export function createHeaderTemplate () {
+  return /*html*/ `<div class="page-body__container  page-header__container">
 <img class="page-header__logo" src="img/logo.png" width="42" height="42" alt="Trip logo">
 
 <div class="trip-main">
@@ -46,5 +46,5 @@ export const createHeaderTemplate = () => (
 
   <button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>
 </div>
-</div>`
-);
+</div>`;
+}
