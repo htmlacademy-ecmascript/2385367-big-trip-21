@@ -1,0 +1,3 @@
+const TRIP_POINTS_COUNT = 5;
+
+export { TRIP_POINTS_COUNT };

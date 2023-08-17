@@ -1,7 +1,7 @@
 import { createElement } from '../render.js';
 import { createTripEventsTemplate } from '../template/trip-events-template.js';
 
-export default class TripEventsView{
+export default class TripEventsView {
   getTemplate() {
     return createTripEventsTemplate();
   }

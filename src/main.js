@@ -1,5 +1,5 @@
-import { panelPresenter } from './presenter/get-new-presenter.js';
-import { headerPresenter } from './presenter/get-new-presenter.js';
+import { panelPresenter } from './presenter/presenters.js';
+import { headerPresenter } from './presenter/presenters.js';
 
 headerPresenter.init();
 panelPresenter.init();

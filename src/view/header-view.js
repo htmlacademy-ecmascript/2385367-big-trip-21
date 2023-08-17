@@ -1,7 +1,7 @@
 import { createElement } from '../render.js';
 import { createHeaderTemplate } from '../template/header-template.js';
 
-export default class HeaderView{
+export default class HeaderView {
   getTemplate() {
     return createHeaderTemplate();
   }

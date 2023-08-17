@@ -1,5 +1,5 @@
-export const createLoadingTemplate = () => (
-  /*html*/`<p class="trip-events__msg">
+export function createLoadingTemplate () {
+  return /*html*/`<p class="trip-events__msg">
   Loading...
-  </p>`
-);
+  </p>`;
+}
