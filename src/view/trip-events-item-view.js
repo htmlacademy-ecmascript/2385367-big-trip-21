@@ -1,27 +1,29 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { createTripEventsItemTemplate } from '../template/trip-events-item-template.js';
 
-export default class TripEventsItemView {
+export default class TripEventsItemView extends AbstractView {
+  #point = null;
+  #tripDestinations = null;
+  #allOffers = null;
+  #handleEventRollupClick = null;
 
-  constructor({ point, tripDestinations, allOffers }) {
-    this.point = point;
-    this.tripDestinations = tripDestinations;
-    this.allOffers = allOffers;
+  constructor({ point, tripDestinations, allOffers, onEventRollupClick }) {
+    super();
+    this.#point = point;
+    this.#tripDestinations = tripDestinations;
+    this.#allOffers = allOffers;
+    this.#handleEventRollupClick = onEventRollupClick;
+
+    this.element.querySelector('.event__rollup-btn')
+      .addEventListener('click', this.#eventRollupClickHandler);
   }
 
-  getTemplate() {
-    return createTripEventsItemTemplate(this.point, this.tripDestinations, this.allOffers);
+  get template() {
+    return createTripEventsItemTemplate(this.#point, this.#tripDestinations, this.#allOffers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #eventRollupClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEventRollupClick();
+  };
 }

@@ -1,20 +1,9 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { createFilterEventMessageTemplate } from '../template/filter-event-message-template.js';
 
-export default class FilterEventMessageView {
-  getTemplate() {
+export default class FilterEventMessageView extends AbstractView {
+
+  get template() {
     return createFilterEventMessageTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }
