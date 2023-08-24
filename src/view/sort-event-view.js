@@ -1,20 +1,8 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { createSortEventFormTemplate } from '../template/sort-event-template.js';
 
-export default class SortEventView {
-  getTemplate() {
+export default class SortEventView extends AbstractView {
+  get template() {
     return createSortEventFormTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

@@ -1,20 +1,8 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { createLoadingTemplate } from '../template/loading-template.js';
 
-export default class LoadingView {
-  getTemplate() {
+export default class LoadingView extends AbstractView {
+  get template() {
     return createLoadingTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }
