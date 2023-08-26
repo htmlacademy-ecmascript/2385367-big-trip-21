@@ -1,4 +1,4 @@
-import { humanizeDate, capitalize } from '../util.js';
+import { humanizeDate, capitalize } from '../../util/common-tasks.js';
 
 export function createEmptyPoint() {
   return {
@@ -11,11 +11,11 @@ export function createEmptyPoint() {
   };
 }
 
-export function createButtonCancelTemplate() {
+function createButtonCancelTemplate() {
   return '<button class="event__reset-btn" type="reset">Cancel</button>';
 }
 
-export function createButtonDeleteTemplate() {
+function createButtonDeleteTemplate() {
   return `<button class="event__reset-btn" type="reset">Delete</button>
   <button class="event__rollup-btn" type="button">
 <span class="visually-hidden">Open event</span>

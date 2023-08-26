@@ -1,10 +1,10 @@
 import {render, replace} from '../framework/render.js';
-import EventTypeFormView from '../view/event-type-form-view.js';
-import TripEventsItemView from '../view/trip-events-item-view.js';
-import TripEventsListView from '../view/trip-events-list-view.js';
-import SortEventView from '../view/sort-event-view.js';
-import TripEventsView from '../view/trip-events-view.js';
-import FilterEventMessageView from '../view/filter-event-message-view.js';
+import EventTypeFormView from '../view/main-view/event-type-form-view.js';
+import TripEventsItemView from '../view/main-view/trip-events-item-view.js';
+import TripEventsListView from '../view/main-view/trip-events-list-view.js';
+import SortEventView from '../view/main-view/sort-event-view.js';
+import TripEventsView from '../view/main-view/trip-events-view.js';
+import FilterEventMessageView from '../view/main-view/filter-event-message-view.js';
 
 export default class MainPresenter {
   #container = null;
@@ -17,7 +17,7 @@ export default class MainPresenter {
   #pointsDestinations = [];
   #pointsOffersByTypes = [];
 
-  constructor({container, pointsModel}) {
+  constructor({ container, pointsModel }) {
     this.#container = container;
     this.#pointsModel = pointsModel;
 
@@ -34,7 +34,7 @@ export default class MainPresenter {
     }
 
     for (const point of this.#points) {
-      this.#renderPoint(point, this.#pointsDestinations, this.#pointsOffersByTypes);
+      this.#renderPoint(point);
     }
 
     render(new SortEventView(), this.#tripEventsView.element);
@@ -47,7 +47,7 @@ export default class MainPresenter {
     const escKeyDownHandler = (evt) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
-        replaceFormToCard.call(this);
+        replaceFormToCard();
         document.removeEventListener('keydown', escKeyDownHandler);
       }
     };
@@ -58,7 +58,7 @@ export default class MainPresenter {
       allOffers: this.#pointsOffersByTypes,
 
       onEventRollupClick: () => {
-        replaceCardToForm.call(this);
+        replaceCardToForm();
         document.addEventListener('keydown', escKeyDownHandler);
       }
     });
@@ -69,12 +69,12 @@ export default class MainPresenter {
       allOffers: this.#pointsOffersByTypes,
 
       onFormSubmit: () => {
-        replaceFormToCard.call(this);
+        replaceFormToCard();
         document.removeEventListener('keydown', escKeyDownHandler);
       },
 
       onRollupClick: () => {
-        replaceFormToCard.call(this);
+        replaceFormToCard();
         document.removeEventListener('keydown', escKeyDownHandler);
       }
     });

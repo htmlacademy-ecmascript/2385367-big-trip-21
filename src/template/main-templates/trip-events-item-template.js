@@ -1,4 +1,4 @@
-import { humanizeDate } from '../util.js';
+import { humanizeDate } from '../../util/common-tasks.js';
 
 export function createTripEventsItemTemplate (point, tripDestinations, allOffers) {
   const { basePrice, destination, type, offers, dateFrom, dateTo } = point;

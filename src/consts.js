@@ -1,3 +1,3 @@
-const TRIP_POINTS_COUNT = 5;
+const TRIP_POINTS_COUNT = 4;
 
 export { TRIP_POINTS_COUNT };

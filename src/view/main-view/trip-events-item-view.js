@@ -1,5 +1,5 @@
-import AbstractView from '../framework/view/abstract-view.js';
-import { createTripEventsItemTemplate } from '../template/trip-events-item-template.js';
+import AbstractView from '../../framework/view/abstract-view.js';
+import { createTripEventsItemTemplate } from '../../template/main-templates/trip-events-item-template.js';
 
 export default class TripEventsItemView extends AbstractView {
   #point = null;

@@ -1,5 +1,5 @@
-import AbstractView from '../framework/view/abstract-view.js';
-import { createEventTypeFormTemplate, createEmptyPoint } from '../template/event-type-form-template.js';
+import AbstractView from '../../framework/view/abstract-view.js';
+import { createEventTypeFormTemplate, createEmptyPoint } from '../../template/main-templates/event-type-form-template.js';
 
 export default class EventTypeFormView extends AbstractView {
   #point = null;
@@ -19,10 +19,7 @@ export default class EventTypeFormView extends AbstractView {
     this.element.querySelector('.event__save-btn')
       .addEventListener('submit', this.#formSubmitHandler);
 
-    if (this.element.querySelector('.event__rollup-btn')) {
-      this.element.querySelector('.event__rollup-btn')
-        .addEventListener('click', this.#rollupEventClickHandler);
-    }
+    this.element.querySelector('.event__rollup-btn')?.addEventListener('click', this.#rollupEventClickHandler);
   }
 
   get template() {
