@@ -25,4 +25,8 @@ function capitalize(text) {
   return text.charAt(0).toUpperCase().concat(text.slice(1));
 }
 
-export { getRandomArrayItem, getRandomNumber, humanizeDate, capitalize };
+function updatePoint(points, update) {
+  return points.map((point) => point.id === update.id ? update : point);
+}
+
+export { getRandomArrayItem, getRandomNumber, humanizeDate, capitalize, updatePoint };

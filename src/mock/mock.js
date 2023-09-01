@@ -1,4 +1,5 @@
 import { getRandomArrayItem, getRandomNumber } from '../util/common-tasks.js';
+import { nanoid } from 'nanoid';
 
 const offersByType = [
   {
@@ -185,88 +186,93 @@ const tripDestinations = [
 
 const mockPoints = [
   {
-    id: '0',
     type: 'taxi',
     offers: [1, 2],
     destination: 2,
     basePrice: 300,
     dateFrom: new Date('2023-10-11:20:35'),
-    dateTo: new Date('2023-10-12:11:25')
+    dateTo: new Date('2023-10-12:11:25'),
+    // isFavorite: getRandomArrayItem([true, false]),
   },
   {
-    id: '1',
     type: 'bus',
     offers: [1, 2],
     destination: 1,
     basePrice: 100,
     dateFrom: new Date('2023-10-10:21:50'),
-    dateTo: new Date('2023-10-11:22:13')
+    dateTo: new Date('2023-10-11:22:13'),
+    // isFavorite: getRandomArrayItem([true, false]),
   },
   {
-    id: '2',
     type: 'train',
     offers: [1, 2],
     destination: 1,
     basePrice: 300,
     dateFrom: new Date('2023-10-09:22:55'),
-    dateTo: new Date('2023-10-10:12:22')
+    dateTo: new Date('2023-10-10:12:22'),
+    // isFavorite: getRandomArrayItem([true, false]),
   },
   {
-    id: '3',
     type: 'ship',
     offers: [1, 2],
     destination: 2,
     basePrice: 120,
     dateFrom: new Date('2023-10-10:22:50'),
-    dateTo: new Date('2023-10-11:22:10')
+    dateTo: new Date('2023-10-11:22:10'),
+    // isFavorite: getRandomArrayItem([true, false]),
   },
   {
-    id: '4',
     type: 'drive',
     offers: [1, 2],
     destination: 3,
     basePrice: 70,
     dateFrom: new Date('2023-10-11:10:55'),
-    dateTo: new Date('2023-10-11:22:13')
+    dateTo: new Date('2023-10-11:22:13'),
+    // isFavorite: getRandomArrayItem([true, false]),
   },
   {
-    id: '5',
     type: 'flight',
     offers: [1, 2, 3],
     destination: 1,
     basePrice: 250,
     dateFrom: new Date('2023-10-10:22:55'),
-    dateTo: new Date('2023-10-10:11:23')
+    dateTo: new Date('2023-10-10:11:23'),
+    // isFavorite: getRandomArrayItem([true, false]),
   },
   {
-    id: '6',
     type: 'check-in',
     offers: [1, 2],
     destination: 3,
     basePrice: 150,
     dateFrom: new Date('2023-10-10:12:55'),
-    dateTo: new Date('2023-10-10:22:22')
+    dateTo: new Date('2023-10-10:22:22'),
+    // isFavorite: getRandomArrayItem([true, false]),
   },
   {
-    id: '7',
     type: 'sightseeing',
     offers: [1, 2],
     destination: 2,
     basePrice: 150,
     dateFrom: new Date('2023-10-10:22:55'),
-    dateTo: new Date('2023-10-11:11:22')
+    dateTo: new Date('2023-10-11:11:22'),
+    // isFavorite: getRandomArrayItem([true, false]),
   },
   {
-    id: '8',
     type: 'restaurant',
     offers: [1, 2],
     destination: 1,
     basePrice: 80,
     dateFrom: new Date('2023-10-10:22:55'),
-    dateTo: new Date('2023-10-11:11:22')
+    dateTo: new Date('2023-10-11:11:22'),
+    // isFavorite: getRandomArrayItem([true, false]),
   }
 ];
 
-const getRandomPoint = () => getRandomArrayItem(mockPoints);
+function getRandomPoint() {
+  return {
+    id: nanoid(),
+    ...getRandomArrayItem(mockPoints)
+  };
+}
 
 export { tripDestinations, offersByType, getRandomPoint};
