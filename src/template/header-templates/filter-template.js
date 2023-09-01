@@ -1,4 +1,4 @@
-function createFilterItemTemplate(filter, isChecked) {
+function createFilterItemTemplate(filter, isChecked = false) {
   const { name, isEmpty } = filter;
 
   return (

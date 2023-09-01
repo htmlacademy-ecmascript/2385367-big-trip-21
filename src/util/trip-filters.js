@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { FilterType } from '../consts';
 
 const isFutureFilter = (dateFrom) => dateFrom && dayjs().isBefore(dateFrom, 'D');
 
@@ -7,15 +8,8 @@ const isPresentFilter = (dateFrom, dateTo) =>
 
 const isPastFilter = (dateTo) => dateTo && dayjs().isBefore(dateTo, 'D');
 
-const FilterType = {
-  EVERYTHING: 'everything',
-  FUTURE: 'future',
-  PRESENT: 'present',
-  PAST: 'past',
-};
-
 const filter = {
-  [FilterType.EVERYTHING]: (points) => points,
+  [FilterType.EVERYTHING]: (points) => points.slice(),
   [FilterType.FUTURE]: (points) => points.filter((point) => isFutureFilter(point.dateFrom)),
   [FilterType.PRESENT]: (points) => points.filter((point) => isPresentFilter(point.dateFrom, point.dateTo)),
   [FilterType.PAST]: (points) => points.filter((point) => isPastFilter(point.dateTo)),
