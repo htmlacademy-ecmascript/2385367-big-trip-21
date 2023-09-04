@@ -12,4 +12,10 @@ const FilterType = {
   PAST: 'past',
 };
 
-export { TRIP_POINTS_COUNT, Mode, FilterType };
+const SortType = {
+  DAY: 'day',
+  TIME: 'time',
+  PRICE: 'price',
+};
+
+export { TRIP_POINTS_COUNT, Mode, FilterType, SortType };
