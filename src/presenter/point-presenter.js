@@ -21,8 +21,8 @@ export default class PointPresenter {
   init(point) {
     this.#point = point;
 
-    const priorCardView = this.#pointCardView;
-    const priorCardEditView = this.#pointFormView;
+    const priorPointCardView = this.#pointCardView;
+    const priorPointFormView = this.#pointFormView;
 
     this.#pointCardView = new TripEventsItemView({... point,
       onEventRollupClick: this.#handleOpenForm,
@@ -34,24 +34,21 @@ export default class PointPresenter {
       onRollupClick: this.#handleCloseForm,
     });
 
-    if (priorCardView === null || priorCardEditView === null) {
+    if (priorPointCardView === null || priorPointFormView === null) {
       render(this.#pointCardView, this.#container);
       return;
     }
 
     if (this.#mode === Mode.DEFAULT) {
-      replace(this.#pointCardView, priorCardView);
-      this.#mode = Mode.EDITING;
+      replace(this.#pointCardView, priorPointCardView);
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#pointFormView, priorCardEditView);
-      this.#mode = Mode.DEFAULT;
-
+      replace(this.#pointFormView, priorPointFormView);
     }
 
-    remove(priorCardView);
-    remove(priorCardEditView);
+    remove(priorPointCardView);
+    remove(priorPointFormView);
   }
 
   destroy() {
@@ -92,7 +89,7 @@ export default class PointPresenter {
   };
 
   #handleFavoriteClick = () => {
-    const isFavoriteKey = this.#point.point['isFavorite'] = !this.#point.isFavorite;
+    const isFavoriteKey = this.#point.point['isFavorite'] = !this.#point.isFavoriteKey;
     const updatedPoint = {...this.#point, isFavoriteKey };
     this.#handlePointChange(updatedPoint);
   };
