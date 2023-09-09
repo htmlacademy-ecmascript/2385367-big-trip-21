@@ -192,7 +192,7 @@ const mockPoints = [
     basePrice: 300,
     dateFrom: new Date('2023-10-11:20:35'),
     dateTo: new Date('2023-10-12:11:25'),
-    // isFavorite: getRandomArrayItem([true, false]),
+    isFavorite: getRandomArrayItem([true, false]),
   },
   {
     type: 'bus',
@@ -201,7 +201,7 @@ const mockPoints = [
     basePrice: 100,
     dateFrom: new Date('2023-10-10:21:50'),
     dateTo: new Date('2023-10-11:22:13'),
-    // isFavorite: getRandomArrayItem([true, false]),
+    isFavorite: getRandomArrayItem([true, false]),
   },
   {
     type: 'train',
@@ -210,7 +210,7 @@ const mockPoints = [
     basePrice: 300,
     dateFrom: new Date('2023-10-09:22:55'),
     dateTo: new Date('2023-10-10:12:22'),
-    // isFavorite: getRandomArrayItem([true, false]),
+    isFavorite: getRandomArrayItem([true, false]),
   },
   {
     type: 'ship',
@@ -219,7 +219,7 @@ const mockPoints = [
     basePrice: 120,
     dateFrom: new Date('2023-10-10:22:50'),
     dateTo: new Date('2023-10-11:22:10'),
-    // isFavorite: getRandomArrayItem([true, false]),
+    isFavorite: getRandomArrayItem([true, false]),
   },
   {
     type: 'drive',
@@ -228,7 +228,7 @@ const mockPoints = [
     basePrice: 70,
     dateFrom: new Date('2023-10-11:10:55'),
     dateTo: new Date('2023-10-11:22:13'),
-    // isFavorite: getRandomArrayItem([true, false]),
+    isFavorite: getRandomArrayItem([true, false]),
   },
   {
     type: 'flight',
@@ -237,7 +237,7 @@ const mockPoints = [
     basePrice: 250,
     dateFrom: new Date('2023-10-10:22:55'),
     dateTo: new Date('2023-10-10:11:23'),
-    // isFavorite: getRandomArrayItem([true, false]),
+    isFavorite: getRandomArrayItem([true, false]),
   },
   {
     type: 'check-in',
@@ -246,7 +246,7 @@ const mockPoints = [
     basePrice: 150,
     dateFrom: new Date('2023-10-10:12:55'),
     dateTo: new Date('2023-10-10:22:22'),
-    // isFavorite: getRandomArrayItem([true, false]),
+    isFavorite: getRandomArrayItem([true, false]),
   },
   {
     type: 'sightseeing',
@@ -255,7 +255,7 @@ const mockPoints = [
     basePrice: 150,
     dateFrom: new Date('2023-10-10:22:55'),
     dateTo: new Date('2023-10-11:11:22'),
-    // isFavorite: getRandomArrayItem([true, false]),
+    isFavorite: getRandomArrayItem([true, false]),
   },
   {
     type: 'restaurant',
@@ -264,7 +264,7 @@ const mockPoints = [
     basePrice: 80,
     dateFrom: new Date('2023-10-10:22:55'),
     dateTo: new Date('2023-10-11:11:22'),
-    // isFavorite: getRandomArrayItem([true, false]),
+    isFavorite: getRandomArrayItem([true, false]),
   }
 ];
 

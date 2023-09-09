@@ -6,52 +6,54 @@ export function createEmptyPoint() {
     dateFrom: new Date(),
     dateTo: new Date(),
     destination: 0,
-    offers: [],
-    type: 'flight',
   };
 }
 
-function createButtonCancelTemplate() {
-  return '<button class="event__reset-btn" type="reset">Cancel</button>';
+export const EMPTY_DESTINATION = {
+  name: '',
+  description: '',
+  pictures: [],
+};
+
+const EMPTY_OFFER = {
+  type: '',
+  offers: [],
+};
+
+function createPicturesListTemplate(pictures) {
+  return pictures.map(({ src, description }) => `<img class="event__photo" src=${src} alt="${description}">`)
+    .join('');
 }
 
-function createButtonDeleteTemplate() {
-  return `<button class="event__reset-btn" type="reset">Delete</button>
-  <button class="event__rollup-btn" type="button">
-<span class="visually-hidden">Open event</span>
-</button>`;
-}
-
-export function createEventTypeFormTemplate(point, tripDestinations, allOffers) {
-  const { basePrice, type, destination, offers, dateFrom, dateTo } = point;
-
-  const destinationInfo = tripDestinations.find((item) => item.id === destination);
-  const offerByType = allOffers.find((offer) => offer.type === type);
-  const typeOffers = offerByType.offers;
-  const templatePictures = destinationInfo?.pictures;
-
-  const pictureTemplate =
-  templatePictures?.map((photo) =>
-    `<img class="event__photo" src="${photo.src}" alt="${photo.description}">`).join('');
-
-  const tripTypeTemplate = allOffers.map((item) =>
+function createTripTypeTemplate(allOffers, point) {
+  return allOffers.map(({ type, id }) =>
     `<div class="event__type-item">
-      <input id="event-type-${item.type}-${point.id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item.type}" ${type === item.type ? 'checked' : ''}>
-      <label class="event__type-label  event__type-label--${item.type}" for="event-type-${item.type}-${point.id}">${capitalize(item.type)}</label>
+      <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${point.type === type ? 'checked' : ''}>
+      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${id}">${capitalize(type)}</label>
     </div>`).join('');
+}
 
-  const offersTemplate =
-  typeOffers.map((offer) =>
+function createOffersTemplate(offers, point) {
+  return offers.map(({ title, price, id }) =>
     `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-${offer.id}" type="checkbox" name="event-offer-${offer.title}" ${offers.includes(offer.id) ? 'checked' : ''}>
-        <label class="event__offer-label" for="event-offer-${offer.title}-${offer.id}">
-          <span class="event__offer-title">${offer.title}</span>
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title}-${id}" type="checkbox" name="event-offer-${title}" ${point.offers.includes(id) ? 'checked' : ''} data-offer-id="${id}">
+        <label class="event__offer-label" for="event-offer-${title}-${id}">
+          <span class="event__offer-title">${title}</span>
           &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offer.price}</span>
+          <span class="event__offer-price">${price}</span>
         </label>
       </div>`).join('');
+}
+
+export function createEventTypeFormTemplate (state, tripDestinations, allOffers) {
+  const { isEdit, ...point } = state;
+  const { basePrice, destination, dateFrom, dateTo, type } = point;
+
+  const { name: descriptionName, description, pictures } = tripDestinations.find((item) => item.id === destination) ?? EMPTY_DESTINATION;
+  const offerByType = allOffers.find((offer) => offer.type === type) ?? EMPTY_OFFER;
 
   const destinationsOptionValueTemplate = tripDestinations.map((item) => `<option value="${item.name}"></option>`).join('');
+  const typeOffers = offerByType.offers;
 
   return (
     `<li class="trip-events__item">
@@ -66,7 +68,7 @@ export function createEventTypeFormTemplate(point, tripDestinations, allOffers) 
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
-                ${tripTypeTemplate}
+                ${createTripTypeTemplate(allOffers, point, type)}
               </fieldset>
             </div>
           </div>
@@ -74,10 +76,10 @@ export function createEventTypeFormTemplate(point, tripDestinations, allOffers) 
             <label class="event__label  event__type-output" for="event-destination-1">
             ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationInfo?.name ?? ''}" list="destination-list-1">
+      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${descriptionName}" list="destination-list-1" required>
             <datalist id="destination-list-1">
               ${destinationsOptionValueTemplate}
-            </datalist>
+              </datalist>
           </div>
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
@@ -85,45 +87,46 @@ export function createEventTypeFormTemplate(point, tripDestinations, allOffers) 
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
             <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${humanizeDate(dateTo, 'YY/MM/DD HH:mm')}">
-        </div>
-        <div class="event__field-group  event__field-group--price">
-          <label class="event__label" for="event-price-1">
-            <span class="visually-hidden">Price</span>
-            &euro;
-          </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
-        </div>
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        ${Object.hasOwn(point, 'id') ? createButtonDeleteTemplate() : createButtonCancelTemplate()}
-          <span class="visually-hidden">Open event</span>
-        </button>
-      </header>
-    <section class="event__details">
-    ${
-    offersTemplate.length > 0 ?
+          </div>
+          <div class="event__field-group  event__field-group--price">
+            <label class="event__label" for="event-price-1">
+              <span class="visually-hidden">Price</span>
+              &euro;
+            </label>
+            <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" min="1" value="${basePrice}">
+          </div>
+          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+          <button class="event__reset-btn" type="reset">${isEdit ? 'Delete' : 'Cancel'}</button>
+          <button class="event__rollup-btn" type="button">
+            <span class="visually-hidden">Open event</span>
+          </button>
+        </header>
+        <section class="event__details">
+        ${
+    offerByType.offers.length > 0 ?
       `<section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-        <div class="event__available-offers">
-          ${offersTemplate}
-      </section>`
-      : ''
-    }
-</section>
-${destinationInfo?.description.length > 0 ?
-      `<section class="event__section  event__section--destination">
-          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destinationInfo?.description }</p>
-          <div class="event__photos-container">
-            <div class="event__photos-tape">
-             ${pictureTemplate}
-            </div>
-          </div>
-          </div>
+            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+            <div class="event__available-offers">
+            ${createOffersTemplate(typeOffers, point)}
         </section>`
       : ''
     }
     </section>
-  </form>
-</li>`
+    ${descriptionName.length > 0 ?
+      `<section class="event__section  event__section--destination">
+            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+            <p class="event__destination-description">${description}</p>
+            <div class="event__photos-container">
+            <div class="event__photos-tape">
+            ${pictures.length > 0 ? createPicturesListTemplate(pictures) : ''}
+            </div>
+          </div>
+          </div>
+          </section>`
+      : ''
+    }
+        </section>
+      </form>
+    </li>`
   );
 }

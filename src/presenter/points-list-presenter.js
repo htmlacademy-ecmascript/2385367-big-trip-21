@@ -11,10 +11,11 @@ import { sortByPrice, sortByDay, sortByTime } from '../util/trip-sorting.js';
 export default class PointsListPresenter {
   #container = null;
   #pointsModel = null;
+  #sortEventView = null;
 
   #tripEventsView = new TripEventsView();
   #tripEventsListView = new TripEventsListView();
-  #sortEventView = null;
+
   #emptyListMessageView = new FilterEventMessageView();
 
   #points = [];
@@ -24,7 +25,7 @@ export default class PointsListPresenter {
 
   #currentSortType = SortType.DAY;
 
-  #pointPresenters = new Map ();
+  #pointPresenters = new Map();
 
   constructor({ container, pointsModel }) {
     this.#container = container;
@@ -77,7 +78,7 @@ export default class PointsListPresenter {
 
   #renderPoints () {
     for (const point of this.#points) {
-      this.#renderPoint(point, this.#destinations, this.#allOffers);
+      this.#renderPoint(point);
     }
   }
 

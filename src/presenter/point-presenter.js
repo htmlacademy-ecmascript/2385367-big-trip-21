@@ -24,12 +24,12 @@ export default class PointPresenter {
     const priorPointCardView = this.#pointCardView;
     const priorPointFormView = this.#pointFormView;
 
-    this.#pointCardView = new TripEventsItemView({... point,
+    this.#pointCardView = new TripEventsItemView({...point,
       onEventRollupClick: this.#handleOpenForm,
       onFavoriteClick: this.#handleFavoriteClick,
     });
 
-    this.#pointFormView = new EventTypeFormView({... point,
+    this.#pointFormView = new EventTypeFormView({...point,
       onFormSubmit: this.#handleSubmitForm,
       onRollupClick: this.#handleCloseForm,
     });
@@ -58,6 +58,7 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#pointFormView.reset(this.#point);
       this.#replaceFormToCard();
     }
   }
@@ -76,7 +77,7 @@ export default class PointPresenter {
   }
 
   #handleCloseForm = () => {
-    this.#replaceFormToCard();
+    this.resetView();
   };
 
   #handleSubmitForm = () => {
@@ -90,7 +91,7 @@ export default class PointPresenter {
 
   #handleFavoriteClick = () => {
     const isFavoriteKey = this.#point.point['isFavorite'] = !this.#point.isFavoriteKey;
-    const updatedPoint = {...this.#point, isFavoriteKey };
+    const updatedPoint = { ...this.#point, isFavoriteKey };
     this.#handlePointChange(updatedPoint);
   };
 
