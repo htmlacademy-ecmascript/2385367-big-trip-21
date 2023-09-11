@@ -18,4 +18,10 @@ const SortType = {
   PRICE: 'price',
 };
 
-export { TRIP_POINTS_COUNT, Mode, FilterType, SortType };
+const DurationFormats = {
+  DAYS: 'DD[D] HH[H] mm[M]',
+  HOURS: 'HH[H] mm[M]',
+  MINUTES: 'mm[M]',
+};
+
+export { TRIP_POINTS_COUNT, Mode, FilterType, SortType, DurationFormats };

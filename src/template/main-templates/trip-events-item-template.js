@@ -1,4 +1,4 @@
-import { humanizeDate } from '../../util/common-tasks.js';
+import { humanizeDate, getDuration } from '../../util/common-tasks.js';
 
 export function createTripEventsItemTemplate (point, tripDestinations, allOffers) {
   const { basePrice, destination, type, offers, isFavorite, dateFrom, dateTo } = point;
@@ -7,6 +7,7 @@ export function createTripEventsItemTemplate (point, tripDestinations, allOffers
   const offersType = allOffers.find((offer) => offer.type === type);
   const checkedOffers = offersType.offers.filter((offer) => offers.includes(offer.id));
   const favoriteClass = isFavorite ? 'event__favorite-btn--active' : '';
+  const duration = getDuration(dateFrom, dateTo);
 
   const createOffersListTemplate = () => {
     if (checkedOffers.length === 0) {
@@ -39,7 +40,7 @@ export function createTripEventsItemTemplate (point, tripDestinations, allOffers
             &mdash;
             <time class="event__end-time" datetime="${dateFrom.toISOString()}">${humanizeDate(dateTo, 'HH:mm')}</time>
           </p>
-          <p class="event__duration">30M</p>
+          <p class="event__duration">${duration}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
