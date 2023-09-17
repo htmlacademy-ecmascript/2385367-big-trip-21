@@ -1,15 +1,8 @@
 import { humanizeDate, capitalize } from '../../util/common-tasks.js';
-
-export function createEmptyPoint() {
-  return {
-    basePrice: 0,
-    dateFrom: new Date(),
-    dateTo: new Date(),
-    destination: 0,
-  };
-}
+import he from 'he';
 
 export const EMPTY_DESTINATION = {
+  id: 0,
   name: '',
   description: '',
   pictures: [],
@@ -19,6 +12,17 @@ const EMPTY_OFFER = {
   type: '',
   offers: [],
 };
+
+export function createEmptyPoint() {
+  return {
+    basePrice: 0,
+    dateFrom: new Date(),
+    dateTo: new Date(),
+    destination: 0,
+    offers: [],
+    type: 'flight',
+  };
+}
 
 function createPicturesListTemplate(pictures) {
   return pictures.map(({ src, description }) => `<img class="event__photo" src=${src} alt="${description}">`)
@@ -68,7 +72,7 @@ export function createEventTypeFormTemplate (state, tripDestinations, allOffers)
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
-                ${createTripTypeTemplate(allOffers, point, type)}
+                ${createTripTypeTemplate(allOffers, point)}
               </fieldset>
             </div>
           </div>
@@ -76,7 +80,7 @@ export function createEventTypeFormTemplate (state, tripDestinations, allOffers)
             <label class="event__label  event__type-output" for="event-destination-1">
             ${type}
             </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${descriptionName}" list="destination-list-1" required>
+      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(descriptionName)}" list="destination-list-1" required>
             <datalist id="destination-list-1">
               ${destinationsOptionValueTemplate}
               </datalist>
@@ -93,7 +97,7 @@ export function createEventTypeFormTemplate (state, tripDestinations, allOffers)
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" min="1" value="${basePrice}">
+            <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" min="1" value="${basePrice}" required>
           </div>
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
           <button class="event__reset-btn" type="reset">${isEdit ? 'Delete' : 'Cancel'}</button>
@@ -103,7 +107,7 @@ export function createEventTypeFormTemplate (state, tripDestinations, allOffers)
         </header>
         <section class="event__details">
         ${
-    offerByType.offers.length > 0 ?
+    typeOffers.length > 0 ?
       `<section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">

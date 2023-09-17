@@ -9,16 +9,18 @@ export default class EventTypeFormView extends AbstractStatefulView {
   #allOffers = null;
   #handleFormSubmit = null;
   #handleRollupClick = null;
+  #handleResetClick = null;
   #datepickerFrom = null;
   #datepickerTo = null;
 
-  constructor({ point = createEmptyPoint(), tripDestinations, allOffers, onFormSubmit, onRollupClick}) {
+  constructor({ point = createEmptyPoint(), tripDestinations, allOffers, onFormSubmit, onRollupClick, onResetClick }) {
     super();
     this.#point = point;
     this.#tripDestinations = tripDestinations;
     this.#allOffers = allOffers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleRollupClick = onRollupClick;
+    this.#handleResetClick = onResetClick;
     this._setState(EventTypeFormView.parsePointToState(point, tripDestinations));
     this._restoreHandlers();
   }
@@ -36,6 +38,7 @@ export default class EventTypeFormView extends AbstractStatefulView {
     element.querySelector('.event__type-group').addEventListener('change', this.#pointTypeChangeHandler);
     element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     element.querySelector('.event__input--price').addEventListener('input', this.#priceInputHandler);
+    element.querySelector('.event__reset-btn').addEventListener('click', this.#formResetClickHandler);
     this.#setDatepickers();
   }
 
@@ -61,6 +64,11 @@ export default class EventTypeFormView extends AbstractStatefulView {
     this._setState({
       basePrice: evt.target.valueAsNumber
     });
+  };
+
+  #formResetClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleResetClick(EventTypeFormView.parseStateToPoint(this._state));
   };
 
   #formSubmitHandler = (evt) => {

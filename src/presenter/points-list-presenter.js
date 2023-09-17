@@ -1,83 +1,133 @@
-import { render, RenderPosition } from '../framework/render.js';
+import { remove, render, RenderPosition } from '../framework/render.js';
 import TripEventsListView from '../view/main-view/trip-events-list-view.js';
 import SortEventView from '../view/main-view/sort-event-view.js';
 import TripEventsView from '../view/main-view/trip-events-view.js';
 import FilterEventMessageView from '../view/main-view/filter-event-message-view.js';
 import PointPresenter from './point-presenter.js';
-import { updatePoint } from '../util/common-tasks.js';
 import { SortType } from '../consts.js';
 import { sortByPrice, sortByDay, sortByTime } from '../util/trip-sorting.js';
+import { UpdateType, UserAction, FilterType } from '../consts.js';
+import { filter } from '../util/trip-filters.js';
+import NewPointFormPresenter from './new-point-form-presenter.js';
 
 export default class PointsListPresenter {
   #container = null;
   #pointsModel = null;
+  #filterModel = null;
+  #newPointFormPresenter = null;
   #sortEventView = null;
 
   #tripEventsView = new TripEventsView();
   #tripEventsListView = new TripEventsListView();
 
-  #emptyListMessageView = new FilterEventMessageView();
-
-  #points = [];
-  #destinations = [];
-  #allOffers = [];
-  #sortedPoints = [];
+  #emptyListMessageView = null;
 
   #currentSortType = SortType.DAY;
+  #filterType = FilterType.EVERYTHING;
 
   #pointPresenters = new Map();
 
-  constructor({ container, pointsModel }) {
+  constructor({ container, pointsModel, filterModel, onNewPointDestroy }) {
     this.#container = container;
     this.#pointsModel = pointsModel;
+    this.#filterModel = filterModel;
+    this.#newPointFormPresenter = new NewPointFormPresenter({
+      container: this.#tripEventsListView.element,
+      onDataChange: this.#handleViewAction,
+      onDestroy: onNewPointDestroy
+    });
+
+    this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
+  }
+
+  get points() {
+    this.#filterType = this.#filterModel.filter;
+    const points = this.#pointsModel.points;
+    const filteredPoints = filter[this.#filterType](points);
+
+    switch (this.#currentSortType) {
+      case SortType.PRICE:
+        return filteredPoints.sort(sortByPrice);
+      case SortType.TIME:
+        return filteredPoints.sort(sortByTime);
+    }
+    return filteredPoints.sort(sortByDay);
+  }
+
+  get offers() {
+    return this.#pointsModel.offersByType;
+  }
+
+  get destinations() {
+    return this.#pointsModel.tripDestinations;
   }
 
   init() {
-    this.#points = [...this.#pointsModel.points];
-    this.#destinations = [...this.#pointsModel.tripDestinations];
-    this.#allOffers = [...this.#pointsModel.offersByType];
-    this.#sortedPoints = [...this.#pointsModel.points];
-
     this.#renderTripEventsView();
+  }
+
+  createPoint() {
+    this.#currentSortType = SortType.DAY;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    if (this.#emptyListMessageView) {
+      remove(this.#emptyListMessageView);
+    }
+    this.#newPointFormPresenter.init({
+      tripDestinations: this.destinations,
+      allOffers: this.offers
+    });
   }
 
   #renderSort() {
     this.#sortEventView = new SortEventView({
+      currentSortType: this.#currentSortType,
       onSortTypeChange: this.#handleSortTypeChange
     });
-    this.#sortPoints(this.#currentSortType);
     render(this.#sortEventView, this.#tripEventsView.element, RenderPosition.AFTERBEGIN);
   }
 
   #renderPoint(point) {
 
-    const pointData = {
-      point,
-      tripDestinations: this.#destinations,
-      allOffers: this.#allOffers,
-    };
-
     const pointPresenter = new PointPresenter({
       container: this.#tripEventsListView.element,
-      onDataChange: this.#handlePointChange,
-      onModeChange: this.#handleModeChange
+      onDataChange: this.#handleViewAction,
+      onModeChange: this.#handleModeChange,
     });
 
-    pointPresenter.init(pointData);
+    pointPresenter.init({
+      point,
+      tripDestinations: this.destinations,
+      allOffers: this.offers,
+    });
     this.#pointPresenters.set(point.id, pointPresenter);
   }
 
   #renderEmptyPoint () {
-    render(this.#emptyListMessageView, this.#container, RenderPosition.AFTERBEGIN);
+    this.#emptyListMessageView = new FilterEventMessageView({
+      filterType: this.#filterType
+    });
+    render(this.#emptyListMessageView, this.#tripEventsView.element, RenderPosition.AFTERBEGIN);
   }
 
-  #clear() {
+  #clear({resetSortType = false} = {}) {
+    this.#newPointFormPresenter.destroy();
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
+
+    remove(this.#sortEventView);
+
+    if (this.#emptyListMessageView) {
+      remove(this.#emptyListMessageView);
+    }
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DAY;
+    }
   }
 
   #renderPoints () {
-    for (const point of this.#points) {
+    for (const point of this.points) {
       this.#renderPoint(point);
     }
   }
@@ -87,9 +137,7 @@ export default class PointsListPresenter {
   }
 
   #renderTripEventsView () {
-    render(this.#tripEventsView, this.#container);
-
-    if (this.#points.length === 0) {
+    if (this.points.length === 0) {
       this.#renderEmptyPoint();
       return;
     }
@@ -97,36 +145,47 @@ export default class PointsListPresenter {
     this.#renderSort();
     this.#renderPoints();
     this.#renderList();
+    render(this.#tripEventsView, this.#container);
   }
 
-  #sortPoints(sortType) {
-    switch (sortType) {
-      case SortType.PRICE:
-        this.#points.sort(sortByPrice);
+  #handleModelEvent = (updateType, point) => {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#pointPresenters.get(point.id).init(point);
         break;
-      case SortType.TIME:
-        this.#points.sort(sortByTime);
+      case UpdateType.MINOR:
+        this.#clear();
+        this.#renderTripEventsView();
         break;
-      default:
-        this.#points.sort(sortByDay);
+      case UpdateType.MAJOR:
+        this.#clear({resetSortType: true});
+        this.#renderTripEventsView();
         break;
     }
-    this.#currentSortType = sortType;
-  }
+  };
+
+  #handleViewAction = (actionType, updateType, update) => {
+    switch (actionType) {
+      case UserAction.UPDATE_POINT:
+        this.#pointsModel.updatePoint(updateType, update);
+        break;
+      case UserAction.ADD_POINT:
+        this.#pointsModel.addPoint(updateType, update);
+        break;
+      case UserAction.DELETE_POINT:
+        this.#pointsModel.deletePoint(updateType, update);
+        break;
+    }
+  };
 
   #handleModeChange = () => {
+    this.#newPointFormPresenter.destroy();
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #handlePointChange = (updatedPoint) => {
-    this.#points = updatePoint(this.#points, updatedPoint);
-    this.#pointPresenters.get(updatedPoint.point.id).init(updatedPoint);
-    this.#sortedPoints = updatePoint(this.#sortedPoints, updatedPoint);
-  };
-
   #handleSortTypeChange = (sortType) => {
-    this.#sortPoints(sortType);
+    this.#currentSortType = sortType;
     this.#clear();
-    this.#renderPoints();
+    this.#renderTripEventsView();
   };
 }

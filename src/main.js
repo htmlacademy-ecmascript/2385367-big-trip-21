@@ -1,5 +1,5 @@
 import { pointsListPresenter } from './presenter/presenters.js';
-import { headerPresenter } from './presenter/presenters.js';
+import { filterPresenter } from './presenter/presenters.js';
 
-headerPresenter.init();
+filterPresenter.init();
 pointsListPresenter.init();

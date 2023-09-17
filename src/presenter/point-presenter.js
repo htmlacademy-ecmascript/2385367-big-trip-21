@@ -1,5 +1,5 @@
 import { render, replace, remove } from '../framework/render.js';
-import { Mode } from '../consts.js';
+import { Mode, UserAction, UpdateType } from '../consts.js';
 import EventTypeFormView from '../view/main-view/event-type-form-view.js';
 import TripEventsItemView from '../view/main-view/trip-events-item-view.js';
 
@@ -18,20 +18,27 @@ export default class PointPresenter {
     this.#handleModeChange = onModeChange;
   }
 
-  init(point) {
+  init({ point, allOffers, tripDestinations }) {
     this.#point = point;
 
     const priorPointCardView = this.#pointCardView;
     const priorPointFormView = this.#pointFormView;
 
-    this.#pointCardView = new TripEventsItemView({...point,
+    this.#pointCardView = new TripEventsItemView({
+      point,
+      tripDestinations,
+      allOffers,
       onEventRollupClick: this.#handleOpenForm,
       onFavoriteClick: this.#handleFavoriteClick,
     });
 
-    this.#pointFormView = new EventTypeFormView({...point,
+    this.#pointFormView = new EventTypeFormView({
+      point,
+      tripDestinations,
+      allOffers,
       onFormSubmit: this.#handleSubmitForm,
       onRollupClick: this.#handleCloseForm,
+      onResetClick: this.#handleResetClick,
     });
 
     if (priorPointCardView === null || priorPointFormView === null) {
@@ -64,9 +71,9 @@ export default class PointPresenter {
   }
 
   #replaceCardToForm() {
+    this.#handleModeChange();
     replace(this.#pointFormView, this.#pointCardView);
     document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#handleModeChange();
     this.#mode = Mode.EDITING;
   }
 
@@ -80,19 +87,35 @@ export default class PointPresenter {
     this.resetView();
   };
 
-  #handleSubmitForm = () => {
+  #handleSubmitForm = (point) => {
+    this.#handlePointChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      point
+    );
     this.#replaceFormToCard();
   };
 
   #handleOpenForm = () => {
-    this.#handleModeChange();
     this.#replaceCardToForm();
   };
 
   #handleFavoriteClick = () => {
-    const isFavoriteKey = this.#point.point['isFavorite'] = !this.#point.isFavoriteKey;
-    const updatedPoint = { ...this.#point, isFavoriteKey };
-    this.#handlePointChange(updatedPoint);
+    const updatedPoint = { ...this.#point, isFavorite: !this.#point.isFavorite };
+    this.#handlePointChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      updatedPoint
+    );
+  };
+
+
+  #handleResetClick = (point) => {
+    this.#handlePointChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
   };
 
   #escKeyDownHandler = (evt) => {

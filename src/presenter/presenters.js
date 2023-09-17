@@ -1,12 +1,38 @@
 import PointsListPresenter from './points-list-presenter.js';
-import HeaderPresenter from './header-presenter.js';
 import PointsModel from '../model/points-model.js';
-import { generateFilter } from '../mock/trip-filters.js';
+import FilterModel from '../model/filter-model.js';
+import FilterPresenter from '../presenter/filter-presenter.js';
+import NewEventButtonView from '../view/header-view/new-event-button-view.js';
+import { render } from '../framework/render.js';
 
 const pointsModel = new PointsModel();
-const tripFilters = generateFilter(pointsModel.points);
+const filterModel = new FilterModel();
 
-const pointsListPresenter = new PointsListPresenter({ container: document.querySelector('.page-main__container'), pointsModel });
-const headerPresenter = new HeaderPresenter({ container: document.querySelector('.page-header__container'), filters: tripFilters });
+const pointsListPresenter = new PointsListPresenter({
+  container: document.querySelector('.page-main__container'),
+  pointsModel,
+  filterModel,
+  onNewPointDestroy: handleNewEventFormClose
+});
 
-export { pointsListPresenter, headerPresenter };
+const filterPresenter = new FilterPresenter({
+  container: document.querySelector('.trip-controls__filters'),
+  filterModel,
+  pointsModel
+});
+
+const newEventButtonView = new NewEventButtonView ({
+  onClick: handleNewEventButtonClick
+});
+
+function handleNewEventFormClose() {
+  newEventButtonView.setEnable();
+}
+
+function handleNewEventButtonClick() {
+  pointsListPresenter.createPoint();
+  newEventButtonView.setDisable();
+}
+render(newEventButtonView, document.querySelector('.trip-main'));
+
+export { pointsListPresenter, filterPresenter };

@@ -9,7 +9,7 @@ export function createTripEventsItemTemplate (point, tripDestinations, allOffers
   const favoriteClass = isFavorite ? 'event__favorite-btn--active' : '';
   const duration = getDuration(dateFrom, dateTo);
 
-  const createOffersListTemplate = () => {
+  function createOffersListTemplate () {
     if (checkedOffers.length === 0) {
       return (
         `<li class="event__offer">
@@ -24,7 +24,7 @@ export function createTripEventsItemTemplate (point, tripDestinations, allOffers
           &plus;&euro;&nbsp;
           <span class="event__offer-price">${offer.price}</span>
         </li>`).join('');
-  };
+  }
 
   return (
     `<li class="trip-events__item">
