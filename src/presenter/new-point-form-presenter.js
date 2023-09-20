@@ -6,7 +6,6 @@ export default class NewPointFormPresenter {
   #container = null;
   #handleDataChange = null;
   #handleDestroy = null;
-
   #newPointFormView = null;
 
   constructor({ container, onDataChange, onDestroy }) {
@@ -44,13 +43,30 @@ export default class NewPointFormPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
+  setSaving() {
+    this.#newPointFormView.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#newPointFormView.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+    this.#newPointFormView.shake(resetFormState);
+  }
+
   #handleFormSubmit = (point) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {...point},
+      point,
     );
-    this.destroy();
   };
 
   #handleResetClick = () => {

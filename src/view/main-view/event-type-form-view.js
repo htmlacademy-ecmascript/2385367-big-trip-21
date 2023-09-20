@@ -15,13 +15,13 @@ export default class EventTypeFormView extends AbstractStatefulView {
 
   constructor({ point = createEmptyPoint(), tripDestinations, allOffers, onFormSubmit, onRollupClick, onResetClick }) {
     super();
+    this._setState(EventTypeFormView.parsePointToState(point, tripDestinations));
     this.#point = point;
     this.#tripDestinations = tripDestinations;
     this.#allOffers = allOffers;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleRollupClick = onRollupClick;
     this.#handleResetClick = onResetClick;
-    this._setState(EventTypeFormView.parsePointToState(point, tripDestinations));
     this._restoreHandlers();
   }
 
@@ -37,7 +37,7 @@ export default class EventTypeFormView extends AbstractStatefulView {
     element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     element.querySelector('.event__type-group').addEventListener('change', this.#pointTypeChangeHandler);
     element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
-    element.querySelector('.event__input--price').addEventListener('input', this.#priceInputHandler);
+    element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
     element.querySelector('.event__reset-btn').addEventListener('click', this.#formResetClickHandler);
     this.#setDatepickers();
   }
@@ -59,7 +59,7 @@ export default class EventTypeFormView extends AbstractStatefulView {
     }
   }
 
-  #priceInputHandler = (evt) => {
+  #priceChangeHandler = (evt) => {
     evt.preventDefault();
     this._setState({
       basePrice: evt.target.valueAsNumber
@@ -100,26 +100,35 @@ export default class EventTypeFormView extends AbstractStatefulView {
 
   #offerChangeHandler = (evt) => {
     evt.preventDefault();
-
-    const currentOfferId = Number(evt.target.dataset.offerId);
-    const { offers } = this._state;
-    const currentOfferIndex = offers.indexOf(currentOfferId);
-    const updatedOffers = currentOfferIndex === -1
-      ? offers.concat(currentOfferId)
-      : offers.slice().splice(currentOfferIndex, 1);
-
-    this._setState({ offers: updatedOffers });
+    evt.target.toggleAttribute('checked');
+    let selectedOffers = this._state.offers;
+    if (evt.target.hasAttribute('checked')) {
+      selectedOffers.push(evt.target.dataset.offerId);
+    } else {
+      selectedOffers = selectedOffers.filter((id) => id !== (evt.target.dataset.offerId));
+    }
+    this._setState({
+      offers: selectedOffers
+    });
   };
 
   static parsePointToState(point) {
     return { ...point,
       isEdit: Object.hasOwn(point, 'id'),
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+      isFavorite: false
     };
   }
 
   static parseStateToPoint(state) {
     const point = {...state};
     delete point.isEdit;
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+
     return point;
   }
 
