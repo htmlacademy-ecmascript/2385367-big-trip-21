@@ -1,5 +1,3 @@
-const TRIP_POINTS_COUNT = 4;
-
 const Mode = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING'
@@ -33,7 +31,13 @@ const UserAction = {
 const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
-  MAJOR: 'MAJOR'
+  MAJOR: 'MAJOR',
+  INIT: 'INIT'
 };
 
-export { TRIP_POINTS_COUNT, Mode, FilterType, SortType, DurationFormats, UserAction, UpdateType };
+const TimeLimit = {
+  LOWER: 350,
+  UPPER: 1000
+};
+
+export { Mode, FilterType, SortType, DurationFormats, UserAction, UpdateType, TimeLimit };
