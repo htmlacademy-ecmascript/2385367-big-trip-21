@@ -8,8 +8,8 @@ import ErrorView from '../view/main-view/error-view.js';
 import PointPresenter from './point-presenter.js';
 import NewPointFormPresenter from './new-point-form-presenter.js';
 import { sortByPrice, sortByDay, sortByTime } from '../util/trip-sorting.js';
-import { UpdateType, UserAction, FilterType, SortType, TimeLimit } from '../consts.js';
-import { filter } from '../util/trip-filters.js';
+import { UpdateType, UserAction, FilterType, SortType, UiBlockerTimeLimit } from '../consts.js';
+import { filterPointsByType } from '../util/trip-filters.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 export default class PointsListPresenter {
@@ -30,8 +30,8 @@ export default class PointsListPresenter {
 
   #isLoading = true;
   #uiBlocker = new UiBlocker({
-    lowerLimit: TimeLimit.LOWER,
-    upperLimit: TimeLimit.UPPER
+    lowerLimit: UiBlockerTimeLimit.LOWER,
+    upperLimit: UiBlockerTimeLimit.UPPER
   });
 
   #pointPresenters = new Map();
@@ -53,7 +53,7 @@ export default class PointsListPresenter {
   get points() {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.points;
-    const filteredPoints = filter[this.#filterType](points);
+    const filteredPoints = filterPointsByType[this.#filterType](points);
 
     switch (this.#currentSortType) {
       case SortType.PRICE:
@@ -71,9 +71,6 @@ export default class PointsListPresenter {
   createPoint() {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    // if (this.#emptyListMessageView) {
-    //   remove(this.#emptyListMessageView);
-    // }
     this.#newPointFormPresenter.init({
       tripDestinations: this.#pointsModel.destinations,
       allOffers: this.#pointsModel.offers
