@@ -59,6 +59,38 @@ export default class EventTypeFormView extends AbstractStatefulView {
     }
   }
 
+  #setDatepickers() {
+    const config = {
+      dateFormat: 'd/m/y H:i',
+      enableTime: true,
+      'time_24hr': true,
+    };
+    this.#datepickerFrom = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        ...config,
+        defaultDate: this._state.dateFrom ?? new Date(),
+        maxDate: this._state.dateTo ?? null,
+        onClose: ([date]) => {
+          this._setState({ dateFrom: date });
+          this.#datepickerTo.config.minDate = date;
+        },
+      }
+    );
+    this.#datepickerTo = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        ...config,
+        defaultDate: this._state.dateTo ?? null,
+        minDate: this._state.dateFrom ?? null,
+        onClose: ([date]) => {
+          this._setState({ dateTo: date });
+          this.#datepickerFrom.config.maxDate = date;
+        },
+      }
+    );
+  }
+
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
     this._setState({
@@ -132,35 +164,4 @@ export default class EventTypeFormView extends AbstractStatefulView {
     return point;
   }
 
-  #setDatepickers() {
-    const config = {
-      dateFormat: 'd/m/y H:i',
-      enableTime: true,
-      'time_24hr': true,
-    };
-    this.#datepickerFrom = flatpickr(
-      this.element.querySelector('#event-start-time-1'),
-      {
-        ...config,
-        defaultDate: this._state.dateFrom ?? new Date(),
-        maxDate: this._state.dateTo ?? null,
-        onClose: ([date]) => {
-          this._setState({ dateFrom: date });
-          this.#datepickerTo.config.minDate = date;
-        },
-      }
-    );
-    this.#datepickerTo = flatpickr(
-      this.element.querySelector('#event-end-time-1'),
-      {
-        ...config,
-        defaultDate: this._state.dateTo ?? null,
-        minDate: this._state.dateFrom ?? null,
-        onClose: ([date]) => {
-          this._setState({ dateTo: date });
-          this.#datepickerFrom.config.maxDate = date;
-        },
-      }
-    );
-  }
 }

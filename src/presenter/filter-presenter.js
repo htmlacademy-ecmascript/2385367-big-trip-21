@@ -1,6 +1,6 @@
 import { FilterType, UpdateType } from '../consts.js';
 import { remove, render, replace } from '../framework/render';
-import { filter } from '../util/trip-filters.js';
+import { filterPointsByType } from '../util/trip-filters.js';
 import FilterView from '../view/header-view/filter-view';
 
 
@@ -32,17 +32,17 @@ export default class FilterPresenter {
       {
         type: FilterType.FUTURE,
         name: FilterType.FUTURE.toLowerCase(),
-        count: filter[FilterType.FUTURE](points).length
+        count: filterPointsByType[FilterType.FUTURE](points).length
       },
       {
         type: FilterType.PRESENT,
         name: FilterType.PRESENT.toLowerCase(),
-        count: filter[FilterType.PRESENT](points).length
+        count: filterPointsByType[FilterType.PRESENT](points).length
       },
       {
         type: FilterType.PAST,
         name: FilterType.PAST.toLowerCase(),
-        count: filter[FilterType.PAST](points).length
+        count: filterPointsByType[FilterType.PAST](points).length
       }
     ];
   }

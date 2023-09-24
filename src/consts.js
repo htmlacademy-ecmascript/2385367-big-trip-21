@@ -35,9 +35,9 @@ const UpdateType = {
   INIT: 'INIT'
 };
 
-const TimeLimit = {
+const UiBlockerTimeLimit = {
   LOWER: 350,
   UPPER: 1000
 };
 
-export { Mode, FilterType, SortType, DurationFormats, UserAction, UpdateType, TimeLimit };
+export { Mode, FilterType, SortType, DurationFormats, UserAction, UpdateType, UiBlockerTimeLimit };

@@ -25,7 +25,7 @@ export function createEmptyPoint() {
 }
 
 function createPicturesListTemplate(pictures) {
-  return pictures.map(({ src, description }) => `<img class="event__photo" src=${src} alt="${description}">`)
+  return pictures.map(({ src, description }) => `<img class="event__photo" src="${src}" alt="${description}">`)
     .join('');
 }
 
@@ -116,7 +116,6 @@ export function createEventTypeFormTemplate (state, tripDestinations, allOffers)
         </section>`
       : ''
     }
-    </section>
     ${descriptionName.length > 0 ?
       `<section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
@@ -130,7 +129,7 @@ export function createEventTypeFormTemplate (state, tripDestinations, allOffers)
           </section>`
       : ''
     }
-        </section>
+    </section>
       </form>
     </li>`
   );
