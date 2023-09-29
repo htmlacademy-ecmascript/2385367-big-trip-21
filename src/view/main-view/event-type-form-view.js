@@ -12,6 +12,7 @@ export default class EventTypeFormView extends AbstractStatefulView {
   #handleResetClick = null;
   #datepickerFrom = null;
   #datepickerTo = null;
+  #saveButtonElement = null;
 
   constructor({ point = createEmptyPoint(), tripDestinations, allOffers, onFormSubmit, onRollupClick, onResetClick }) {
     super();
@@ -39,6 +40,8 @@ export default class EventTypeFormView extends AbstractStatefulView {
     element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
     element.querySelector('.event__reset-btn').addEventListener('click', this.#formResetClickHandler);
+    this.#saveButtonElement = element.querySelector('.event__save-btn');
+    this.#saveButtonElement.disabled = !this.#isSavingAvailable();
     this.#setDatepickers();
   }
 
@@ -59,6 +62,15 @@ export default class EventTypeFormView extends AbstractStatefulView {
     }
   }
 
+  #isSavingAvailable() {
+    return (
+      this._state.destination &&
+      Number(this._state.basePrice) &&
+      this._state.dateFrom &&
+      this._state.dateTo
+    );
+  }
+
   #setDatepickers() {
     const config = {
       dateFormat: 'd/m/y H:i',
@@ -74,6 +86,7 @@ export default class EventTypeFormView extends AbstractStatefulView {
         onClose: ([date]) => {
           this._setState({ dateFrom: date });
           this.#datepickerTo.config.minDate = date;
+          this.#saveButtonElement.disabled = !this.#isSavingAvailable();
         },
       }
     );
@@ -86,6 +99,7 @@ export default class EventTypeFormView extends AbstractStatefulView {
         onClose: ([date]) => {
           this._setState({ dateTo: date });
           this.#datepickerFrom.config.maxDate = date;
+          this.#saveButtonElement.disabled = !this.#isSavingAvailable();
         },
       }
     );
@@ -94,8 +108,9 @@ export default class EventTypeFormView extends AbstractStatefulView {
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
     this._setState({
-      basePrice: evt.target.valueAsNumber
+      basePrice: evt.target.value,
     });
+    this.#saveButtonElement.disabled = !this.#isSavingAvailable();
   };
 
   #formResetClickHandler = (evt) => {
@@ -156,6 +171,7 @@ export default class EventTypeFormView extends AbstractStatefulView {
 
   static parseStateToPoint(state) {
     const point = {...state};
+    point.basePrice = Number(point.basePrice);
     delete point.isEdit;
     delete point.isDisabled;
     delete point.isSaving;

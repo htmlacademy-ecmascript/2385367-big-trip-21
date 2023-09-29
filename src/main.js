@@ -1,6 +1,7 @@
 import PointsListPresenter from './presenter/points-list-presenter.js';
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
+import HeaderPresenter from './presenter/header-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import NewEventButtonView from './view/header-view/new-event-button-view.js';
 import { render } from './framework/render.js';
@@ -19,6 +20,11 @@ const pointsListPresenter = new PointsListPresenter({
   pointsModel,
   filterModel,
   onNewPointDestroy: handleNewEventFormClose
+});
+
+const headerPresenter = new HeaderPresenter({
+  container: document.querySelector('.trip-main'),
+  pointsModel,
 });
 
 const filterPresenter = new FilterPresenter({
@@ -44,5 +50,6 @@ pointsModel.init()
   .finally(() => {
     render(newEventButtonView, document.querySelector('.trip-main'));
   });
+headerPresenter.init();
 filterPresenter.init();
 pointsListPresenter.init();

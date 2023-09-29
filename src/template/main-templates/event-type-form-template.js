@@ -69,7 +69,8 @@ export function createEventTypeFormTemplate (state, tripDestinations, allOffers)
               <span class="visually-hidden">Choose event type</span>
               <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
             </label>
-            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+            <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox"
+            ${isDisabled ? 'disabled' : ''}>
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
@@ -86,50 +87,53 @@ export function createEventTypeFormTemplate (state, tripDestinations, allOffers)
               ${destinationsOptionValueTemplate}
               </datalist>
           </div>
-          <div class="event__field-group  event__field-group--time" ${isDisabled ? 'disabled' : ''}>
+          <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-1">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${humanizeDate(dateFrom, 'YY/MM/DD HH:mm')}">
+            <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${humanizeDate(dateFrom, 'YY/MM/DD HH:mm')}" required ${isDisabled ? 'disabled' : ''}>
             &mdash;
             <label class="visually-hidden" for="event-end-time-1">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${humanizeDate(dateTo, 'YY/MM/DD HH:mm')}">
+            <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${humanizeDate(dateTo, 'YY/MM/DD HH:mm')}" required ${isDisabled ? 'disabled' : ''}>
           </div>
           <div class="event__field-group  event__field-group--price">
             <label class="event__label" for="event-price-1">
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" min="1" value="${basePrice}" ${isDisabled ? 'disabled' : ''} required>
+            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price"
+                    value="${he.encode(String(basePrice))}"
+                    pattern="^[1-9]&bsol;d*$" required
+                    oninvalid="this.setCustomValidity('Пожалуйста, введите целое положительное число')" onchange="this.setCustomValidity('')"
+                    ${isDisabled ? 'disabled' : ''}>
           </div>
           <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
-          <button class="event__reset-btn" type="reset">${isEdit ? deleteButtonText : 'Cancel'}</button>
+          <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isEdit ? deleteButtonText : 'Cancel'}</button>
           ${isEdit ? '<button class="event__rollup-btn" type="button">' : ''}
             <span class="visually-hidden">Open event</span>
           </button>
         </header>
         <section class="event__details">
-        ${
-    typeOffers.length > 0 ?
+         ${typeOffers.length > 0 ?
       `<section class="event__section  event__section--offers">
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
             <div class="event__available-offers">
             ${createOffersTemplate(typeOffers, point)}
-        </section>`
-      : ''
+            </div>
+           </section>` : ''
     }
-    ${descriptionName.length > 0 ?
+    ${description.length > 0 ?
       `<section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
             <p class="event__destination-description">${description}</p>
-            <div class="event__photos-container">
-            <div class="event__photos-tape">
-            ${pictures.length > 0 ? createPicturesListTemplate(pictures) : ''}
+            ${pictures.length > 0 ?
+      `<div class="event__photos-container">
+              <div class="event__photos-tape">
+              ${createPicturesListTemplate(pictures)}
             </div>
-          </div>
-          </div>
-          </section>`
-      : ''
+          </div>` : ''
     }
-    </section>
+    </section>` : ''
+    }
+  </section>
       </form>
     </li>`
   );
