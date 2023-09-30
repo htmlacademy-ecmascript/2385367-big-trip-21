@@ -5,7 +5,7 @@ import HeaderPresenter from './presenter/header-presenter.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import NewEventButtonView from './view/header-view/new-event-button-view.js';
 import { render } from './framework/render.js';
-import PointApiService from './api-service.js';
+import PointApiService from './point-api-service.js';
 
 const AUTHORIZATION = 'Basic iv9k487pl12986y';
 const END_POINT = 'https://21.objects.pages.academy/big-trip';

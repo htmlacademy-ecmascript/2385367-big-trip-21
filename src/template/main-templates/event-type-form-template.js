@@ -16,8 +16,8 @@ const EMPTY_OFFER = {
 export function createEmptyPoint() {
   return {
     basePrice: 0,
-    dateFrom: new Date(),
-    dateTo: new Date(),
+    dateFrom: null,
+    dateTo: null,
     destination: 0,
     offers: [],
     type: 'flight',
