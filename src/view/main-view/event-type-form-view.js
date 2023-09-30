@@ -77,15 +77,16 @@ export default class EventTypeFormView extends AbstractStatefulView {
       enableTime: true,
       'time_24hr': true,
     };
+
     this.#datepickerFrom = flatpickr(
       this.element.querySelector('#event-start-time-1'),
       {
         ...config,
-        defaultDate: this._state.dateFrom ?? new Date(),
+        defaultDate: this._state.dateFrom,
         maxDate: this._state.dateTo ?? null,
         onClose: ([date]) => {
-          this._setState({ dateFrom: date });
-          this.#datepickerTo.config.minDate = date;
+          this._setState({ dateFrom: date ?? null });
+          this.#datepickerTo.config.minDate = date ?? null;
           this.#saveButtonElement.disabled = !this.#isSavingAvailable();
         },
       }
@@ -94,16 +95,17 @@ export default class EventTypeFormView extends AbstractStatefulView {
       this.element.querySelector('#event-end-time-1'),
       {
         ...config,
-        defaultDate: this._state.dateTo ?? null,
+        defaultDate: this._state.dateTo,
         minDate: this._state.dateFrom ?? null,
         onClose: ([date]) => {
-          this._setState({ dateTo: date });
-          this.#datepickerFrom.config.maxDate = date;
+          this._setState({ dateTo: date ?? null });
+          this.#datepickerFrom.config.maxDate = date ?? null;
           this.#saveButtonElement.disabled = !this.#isSavingAvailable();
         },
       }
     );
   }
+
 
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
